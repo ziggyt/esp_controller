@@ -14,7 +14,9 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   MqttEspCommunicator controller = MqttEspCommunicator.getInstance();
   String loadingMsg = "Connecting to MQTT broker...";
-  List<Color> colors = [Colors.lightBlueAccent, Colors.pinkAccent[100]];
+
+  //List<Color> colors = [Colors.lightBlueAccent, Colors.pinkAccent[100]];
+  List<Color> colors = [Colors.blue[900], Colors.grey[500]];
 
   @override
   void initState() {
@@ -34,8 +36,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     });
 
     await Future.delayed(Duration(seconds: 2));
-    Navigator.push(
-        context, new MaterialPageRoute(builder: (__) => new Home()));
+
+    Navigator.pushReplacementNamed(context, "/home");
   }
 
   @override
@@ -43,7 +45,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     return Scaffold(
       //backgroundColor: Colors.blueAccent,
       body: Container(
-        decoration: BoxDecoration(gradient: LinearGradient(colors: colors)),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+                colors: colors)),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -54,7 +60,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   size: 60,
                 ),
               ),
-              SizedBox(height: 55,),
+              SizedBox(
+                height: 55,
+              ),
               Text(
                 loadingMsg,
                 style: TextStyle(

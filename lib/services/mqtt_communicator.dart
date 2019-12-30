@@ -11,10 +11,12 @@ class MqttEspCommunicator {
   final String CURRENT_MODE_STRING_TOPIC = "/esp/modeString";
   final String CURRENT_BRIGHTNESS_TOPIC = "/esp/brightness";
   final String CURRENT_COLOR_TOPIC = "/esp/color";
+  final String CURRENT_SPEED_TOPIC = "/esp/speed";
 
   int currentMode = -999;
   int currentBrightness = -999;
-  String currentModeString = "";
+  int currentSpeed = 10000;
+  String currentModeString = "Unknown";
   Color currentColor;
   static MqttEspCommunicator controller = MqttEspCommunicator();
 
@@ -29,19 +31,25 @@ class MqttEspCommunicator {
     client.subscribe(CURRENT_MODE_TOPIC, MqttQos.atLeastOnce);
     client.subscribe(CURRENT_BRIGHTNESS_TOPIC, MqttQos.atLeastOnce);
     client.subscribe(CURRENT_COLOR_TOPIC, MqttQos.atLeastOnce);
+    client.subscribe(CURRENT_SPEED_TOPIC, MqttQos.atLeastOnce);
   }
 
   Future<void> publishToTopic(String topic, [String message = ""]) async {
     final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
     builder.addString(message);
 
-    print('EXAMPLE::Publishing our topic');
+    print('EXAMPLE::Publishing to $topic with message: $message');
     client.publishMessage(topic, MqttQos.exactlyOnce, builder.payload);
   }
 
   Future<void> connectToMqttClient() async {
     client.onDisconnected = onDisconnected;
     client.onConnected = onConnected;
+
+    final MqttConnectMessage connMess = MqttConnectMessage()
+        .withClientIdentifier(randomAlpha(20));
+    print('EXAMPLE::Mosquitto client connecting....');
+    client.connectionMessage = connMess;
 
     try {
       await client.connect();
@@ -80,6 +88,7 @@ class MqttEspCommunicator {
 
     if (topic == CURRENT_MODE_TOPIC) {
       currentMode = int.parse(message);
+      print("Current mode is $currentMode");
     }
     if (topic == CURRENT_BRIGHTNESS_TOPIC) {
       currentBrightness = int.parse(message);
@@ -90,6 +99,9 @@ class MqttEspCommunicator {
     }
     if (topic == CURRENT_COLOR_TOPIC) {
       currentColor = Color(int.parse(message));
+    }
+    if (topic == CURRENT_SPEED_TOPIC) {
+      currentSpeed = int.parse(message);
     }
   }
 

@@ -1,3 +1,4 @@
+import 'package:esp_controller/pages/home.dart';
 import 'package:esp_controller/services/mqtt_communicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
@@ -21,41 +22,30 @@ class _ColorPickerState extends State<ColorPicker> {
     return Scaffold(
       body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-                flex: 4,
+              flex: 1,
                 child: MaterialColorPicker(
-                  shrinkWrap: true,
+                  allowShades: true,
+                  //shrinkWrap: true,
+                  selectedColor: Home.selectedColor,
                   onColorChange: (Color color) {
-                    String hexColor = "0x" + HEX.encode([color.red, color.green, color.blue]).toUpperCase();
-                    print(hexColor);
+                    String hexColor = "0x" +
+                        HEX.encode(
+                            [color.red, color.green, color.blue]).toUpperCase();
                     controller.publishToTopic(CHANGE_COLOR_TOPIC, hexColor);
+                    setState(() {
+                      Home.selectedColor = color;
+                    });
                   },
                 )),
-            Center(
-              child: Text(
-                "Brightness: $brightnessInt",
-                style: TextStyle(fontSize: 30, color: Colors.grey[800]),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Slider(
-                value: brightness,
-                onChanged: (value) {
-                  setState(() {
-                    brightness = value;
-                    brightnessInt = brightness.round();
-                  });
-                },
-                onChangeEnd: (double) {
-                  controller.publishToTopic(
-                      SET_BRIGHTNESS_TOPIC, "$brightnessInt");
-                },
-                min: 1,
-                max: 60,
-              ),
-            )
+            //SizedBox(height: 40),
+            Container(
+                padding: EdgeInsets.all(20.0),
+                child: Text("Current Color"),
+                decoration: BoxDecoration(
+                    color: Home.selectedColor))
           ]),
     );
   }

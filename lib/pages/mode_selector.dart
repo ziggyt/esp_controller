@@ -16,6 +16,15 @@ class _ModeSelectorState extends State<ModeSelector> {
   final MqttEspCommunicator controller = MqttEspCommunicator.getInstance();
 
   String currentModeString = "Unknown";
+  int currentMode = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    currentModeString = controller.currentModeString;
+    currentMode = controller.currentMode;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,23 +32,23 @@ class _ModeSelectorState extends State<ModeSelector> {
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Center(
                 child: Text(
-              "Current Mode",
-              style: TextStyle(fontSize: 40, color: Colors.grey[900]),
+              "Current Mode ($currentMode)",
+              style: TextStyle(fontSize: 45, color: Colors.grey[900], fontStyle: FontStyle.italic),
             )),
             SizedBox(
-              height: 10,
+              height: 40,
             ),
             Center(
                 child: Text(
               "$currentModeString",
-              style: TextStyle(fontSize: 40, color: Colors.grey[900]),
+              style: TextStyle(fontSize: 30, color: Colors.grey[900]),
             )),
       SizedBox(
-        height: 20),
+        height: 70),
             LargeButton(
               controller: controller,
               text: "Increase Mode",
@@ -48,6 +57,7 @@ class _ModeSelectorState extends State<ModeSelector> {
                 await Future.delayed(Duration(milliseconds: 500));
                 setState(() {
                   currentModeString = controller.currentModeString;
+                  currentMode = controller.currentMode;
                   print(currentModeString);
                 });
               },
@@ -63,6 +73,7 @@ class _ModeSelectorState extends State<ModeSelector> {
 
                 setState(() {
                   currentModeString = controller.currentModeString;
+                  currentMode = controller.currentMode;
                   print(currentModeString);
                 });
               },
@@ -83,20 +94,23 @@ class LargeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: RaisedButton(
-        padding: EdgeInsets.symmetric(vertical: 35.0, horizontal: 50.0),
-        color: Colors.blue,
-        textColor: Colors.white,
-        child: Text(
-          text,
-          style: TextStyle(
-              fontSize: 32.0,
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic,
-              textBaseline: TextBaseline.alphabetic),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      child: Center(
+        child: RaisedButton(
+          padding: EdgeInsets.symmetric(vertical: 35.0, horizontal: 50.0),
+          color: Colors.blue,
+          textColor: Colors.white,
+          child: Text(
+            text,
+            style: TextStyle(
+                fontSize: 32.0,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+                textBaseline: TextBaseline.alphabetic),
+          ),
+          onPressed: onPressed,
         ),
-        onPressed: onPressed,
       ),
     );
   }
