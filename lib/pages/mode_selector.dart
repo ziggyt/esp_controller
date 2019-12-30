@@ -6,20 +6,16 @@ final String DECREASE_MODE_TOPIC = "/esp/decreaseMode";
 final String SPECIFIC_MODE_TOPIC = "/esp/specific";
 
 class ModeSelector extends StatefulWidget {
-  final MqttEspCommunicator controller;
-
-  ModeSelector({this.controller});
 
   @override
   _ModeSelectorState createState() =>
-      _ModeSelectorState(controller: controller);
+      _ModeSelectorState();
 }
 
 class _ModeSelectorState extends State<ModeSelector> {
-  MqttEspCommunicator controller;
-  String currentModeString = "Unknown";
+  final MqttEspCommunicator controller = MqttEspCommunicator.getInstance();
 
-  _ModeSelectorState({this.controller});
+  String currentModeString = "Unknown";
 
   @override
   Widget build(BuildContext context) {

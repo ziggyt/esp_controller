@@ -35,7 +35,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     await Future.delayed(Duration(seconds: 2));
     Navigator.push(
-        context, new MaterialPageRoute(builder: (__) => new Home(controller)));
+        context, new MaterialPageRoute(builder: (__) => new Home()));
   }
 
   @override

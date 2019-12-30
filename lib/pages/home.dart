@@ -5,28 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 
 class Home extends StatefulWidget {
-  final MqttEspCommunicator controller;
-
-  Home(this.controller);
-
+  final MqttEspCommunicator controller = MqttEspCommunicator.getInstance();
   @override
-  _HomeState createState() => _HomeState(ModeSelector(controller: controller), ColorPicker(controller: controller,));
+  _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
-  ModeSelector modeSelector;
-  ColorPicker colorPicker;
+
   List<Widget> _children;
   
   List<Color> colors = [Colors.lightBlueAccent, Colors.pinkAccent[100]];
 
-  _HomeState(this.modeSelector, this.colorPicker);
-
   @override
   void initState() {
     super.initState();
-    _children = [colorPicker, modeSelector, PlaceholderWidget(Colors.green)];
+    _children = [ColorPicker(), ModeSelector(), PlaceholderWidget(Colors.green)];
   }
 
   void onTabTapped(int index) {

@@ -7,20 +7,14 @@ final String SET_BRIGHTNESS_TOPIC = "/esp/setBrightness";
 final String CHANGE_COLOR_TOPIC = "/esp/changeColor";
 
 class ColorPicker extends StatefulWidget {
-  final MqttEspCommunicator controller;
-
-  ColorPicker({this.controller});
-
   @override
-  _ColorPickerState createState() => _ColorPickerState(controller: controller);
+  _ColorPickerState createState() => _ColorPickerState();
 }
 
 class _ColorPickerState extends State<ColorPicker> {
-  MqttEspCommunicator controller;
+  final MqttEspCommunicator controller = MqttEspCommunicator.getInstance();
   double brightness = 10;
   int brightnessInt = 10;
-
-  _ColorPickerState({this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +25,13 @@ class _ColorPickerState extends State<ColorPicker> {
             Expanded(
                 flex: 4,
                 child: MaterialColorPicker(
-                    onColorChange: (Color color) {
-                      // Handle color changes
-                      print(color.blue);
-                      print(color.red);
-                      print(color.green);
-
-                      String hexColor = HEX.encode([color.red, color.green, color.blue]);
-                      controller.publishToTopic(CHANGE_COLOR_TOPIC, hexColor);
-                    },
-                    selectedColor: Colors.red)),
+                  shrinkWrap: true,
+                  onColorChange: (Color color) {
+                    String hexColor = "0x" + HEX.encode([color.red, color.green, color.blue]).toUpperCase();
+                    print(hexColor);
+                    controller.publishToTopic(CHANGE_COLOR_TOPIC, hexColor);
+                  },
+                )),
             Center(
               child: Text(
                 "Brightness: $brightnessInt",

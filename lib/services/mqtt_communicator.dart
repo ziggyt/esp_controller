@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
+import 'package:random_string/random_string.dart';
 
 class MqttEspCommunicator {
   final MqttClient client = MqttClient('192.168.1.201', '1883');
@@ -119,7 +120,7 @@ class MqttEspCommunicator {
   /// The successful connect callback
   void onConnected() {
     print(
-        'EXAMPLE::OnConnected client callback - Client connection was sucessful');
+        'EXAMPLE::OnConnected client callback - Client connection was successful');
   }
 
   void printDebugInfo() {
